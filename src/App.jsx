@@ -6,6 +6,7 @@ import ShortForm from './pages/ShortForm';
 import LongForm from './pages/LongForm';
 import Login from './pages/Login';
 import Admin from './pages/Admin';
+import KyndallPitch from './pages/KyndallPitch';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -19,6 +20,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/short-form" element={<ShortForm />} />
             <Route path="/long-form" element={<LongForm />} />
+            <Route path="/kyndall" element={<KyndallPitch />} />
             <Route path="/login" element={<Login />} />
             <Route 
               path="/admin" 
