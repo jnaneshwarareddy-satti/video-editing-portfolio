@@ -1,0 +1,39 @@
+.portfolio-page {
+  padding-top: 120px;
+  min-height: 100vh;
+}
+
+.page-title {
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 4rem auto;
+}
+
+.video-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+/* For Short Form Videos (9:16 aspect ratio) - more columns */
+.short-grid {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+/* For Long Form Videos (16:9 aspect ratio) - fewer columns */
+.long-grid {
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+}
+
+@media (max-width: 768px) {
+  .long-grid {
+    grid-template-columns: 1fr;
+  }
+}
