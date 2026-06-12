@@ -94,7 +94,16 @@ const Home = () => {
                 and generated my first $500. Now, I use this proven, algorithmic-driven editing 
                 approach to help clients scale their own channels.
               </p>
-              <a href="mailto:jnaneshwarareddysatti@gmail.com" className="btn-primary" style={{ marginTop: '2rem', display: 'inline-block' }}>
+              <div className="software-stack" style={{ marginTop: '2.5rem' }}>
+                <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Software Arsenal</h3>
+                <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
+                  <span className="software-badge">Premiere Pro</span>
+                  <span className="software-badge">DaVinci Resolve</span>
+                  <span className="software-badge">CapCut Pro</span>
+                  <span className="software-badge">Adobe Photoshop</span>
+                </div>
+              </div>
+              <a href="mailto:jnaneshwarareddysatti@gmail.com" className="btn-primary" style={{ marginTop: '2.5rem', display: 'inline-block' }}>
                 Let's Work Together
               </a>
             </div>
