@@ -42,11 +42,11 @@ const Home = () => {
         <div className="container hero-container">
           <div className="hero-content">
             <h1 className="hero-title">
-              Crafting <span className="text-accent-gradient">Creator</span> <br />
+              Crafting <span className="text-accent-gradient">Faceless</span> <br />
               Masterpieces.
             </h1>
             <p className="hero-subtitle">
-              I specialize in high-retention video editing for creators and YouTube channels. 
+              I specialize in high-retention video editing for faceless YouTube channels. 
               Turning raw ideas into monetized, engaging content.
             </p>
             <div className="hero-actions">
@@ -86,12 +86,13 @@ const Home = () => {
             <div className="about-content">
               <h2 className="section-title">The Journey</h2>
               <p className="about-text">
-                Over the past year, I dove deep into the world of YouTube editing. 
-                I learned the art of pacing, sound design, and visual storytelling—skills that keep viewers hooked from the first second.
+                Over the past year, I dove deep into the world of faceless YouTube channels. 
+                I learned the art of pacing, sound design, and visual storytelling—all without ever showing a face.
               </p>
               <p className="about-text">
-                By applying these skills, I successfully helped channels achieve monetization. Now, I use this proven, algorithmic-driven editing 
-                approach to help creators and brands scale their own presence.
+                By applying these skills to my own channels, I successfully achieved monetization 
+                and generated my first $500. Now, I use this proven, algorithmic-driven editing 
+                approach to help clients scale their own channels.
               </p>
               <div className="software-stack" style={{ marginTop: '2.5rem' }}>
                 <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Software Arsenal</h3>
