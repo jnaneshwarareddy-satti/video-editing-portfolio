@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { signOut } from 'firebase/auth';
-import { db, auth, storage } from '../firebase';
+import { db, auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Plus, Edit2, Trash2, Video, Image as ImageIcon } from 'lucide-react';
 import './Admin.css';
@@ -23,7 +22,7 @@ const Admin = () => {
   // Thumbnail Form State
   const [thumbTitle, setThumbTitle] = useState('');
   const [thumbVideoUrl, setThumbVideoUrl] = useState('');
-  const [thumbFile, setThumbFile] = useState(null);
+  const [thumbImageUrl, setThumbImageUrl] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   
   const navigate = useNavigate();
@@ -125,21 +124,17 @@ const Admin = () => {
       alert("Invalid YouTube URL or ID");
       return;
     }
-    if (!thumbFile) {
-      alert("Please select a redesigned thumbnail image.");
+    if (!thumbImageUrl) {
+      alert("Please enter the redesigned thumbnail URL.");
       return;
     }
 
     setIsUploading(true);
     try {
-      const storageRef = ref(storage, `thumbnails/${Date.now()}_${thumbFile.name}`);
-      const snapshot = await uploadBytes(storageRef, thumbFile);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-
       const payload = {
         title: thumbTitle,
         originalVideoId: videoId,
-        redesignedUrl: downloadURL,
+        redesignedUrl: thumbImageUrl,
         createdAt: serverTimestamp(),
       };
       
@@ -147,20 +142,20 @@ const Admin = () => {
       
       setThumbTitle('');
       setThumbVideoUrl('');
-      setThumbFile(null);
+      setThumbImageUrl('');
       e.target.reset();
       
       fetchData();
     } catch (error) {
       console.error("Error saving thumbnail:", error);
-      alert("Failed to save thumbnail. Ensure Firebase Storage is enabled and rules allow writing.");
+      alert("Failed to save thumbnail.");
     } finally {
       setIsUploading(false);
     }
   };
 
   const handleThumbnailDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this thumbnail? Note: This does not delete the image from Storage automatically.")) {
+    if (window.confirm("Are you sure you want to delete this thumbnail?")) {
       try {
         await deleteDoc(doc(db, 'thumbnails', id));
         fetchData();
@@ -251,12 +246,13 @@ const Admin = () => {
                     <input type="text" value={thumbVideoUrl} onChange={(e) => setThumbVideoUrl(e.target.value)} required placeholder="https://www.youtube.com/watch?v=..." />
                   </div>
                   <div className="input-group">
-                    <label>Upload Redesigned Thumbnail (For "After")</label>
-                    <input type="file" accept="image/*" onChange={(e) => setThumbFile(e.target.files[0])} required />
+                    <label>Redesigned Thumbnail URL (For "After")</label>
+                    <input type="text" value={thumbImageUrl} onChange={(e) => setThumbImageUrl(e.target.value)} required placeholder="e.g., /thumb1.jpg or https://imgur.com/..." />
+                    <p style={{fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.5rem'}}>Put the image in your public folder and type the path (e.g. /thumb1.jpg)</p>
                   </div>
                   <div className="form-actions">
                     <button type="submit" className="btn-primary" disabled={isUploading}>
-                      {isUploading ? 'Uploading...' : <><Plus size={18} /> Upload Thumbnail</>}
+                      {isUploading ? 'Saving...' : <><Plus size={18} /> Add Thumbnail</>}
                     </button>
                   </div>
                 </form>
