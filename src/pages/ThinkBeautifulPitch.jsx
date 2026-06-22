@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Globe, Target, Image as ImageIcon, ArrowRight } from 'lucide-react';
+import { Sparkles, Globe, Target, Image as ImageIcon, ArrowRight, Camera } from 'lucide-react';
 import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import SEO from '../components/SEO';
@@ -87,9 +87,14 @@ const ThinkBeautifulPitch = () => {
             <p>
               <strong>Pricing:</strong> I am incredibly flexible. Whether you prefer a monthly retainer, or a per-thumbnail rate (whatever dollars works for your budget), I am ready to adapt. My goal is a long-term partnership.
             </p>
-            <a href="mailto:jnaneshwarareddysatti@gmail.com?subject=Think Beautiful Thumbnails" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem' }}>
-              Let's Talk <ArrowRight size={18} />
-            </a>
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+              <a href="mailto:jnaneshwarareddysatti@gmail.com?subject=Think Beautiful Thumbnails" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                Let's Talk <ArrowRight size={18} />
+              </a>
+              <a href="https://instagram.com/jnaneshwar_39" target="_blank" rel="noreferrer" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#E1306C', borderColor: '#E1306C' }}>
+                <Camera size={18} /> @jnaneshwar_39
+              </a>
+            </div>
           </div>
         </div>
 
