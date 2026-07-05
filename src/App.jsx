@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Admin from './pages/Admin';
 import KyndallPitch from './pages/KyndallPitch';
 import ThinkBeautifulPitch from './pages/ThinkBeautifulPitch';
+import MizanaReactsPitch from './pages/MizanaReactsPitch';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -23,6 +24,7 @@ function App() {
             <Route path="/long-form" element={<LongForm />} />
             <Route path="/kyndall" element={<KyndallPitch />} />
             <Route path="/think-beautiful" element={<ThinkBeautifulPitch />} />
+            <Route path="/mizana-reacts" element={<MizanaReactsPitch />} />
             <Route path="/login" element={<Login />} />
             <Route 
               path="/admin" 
