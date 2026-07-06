@@ -10,6 +10,7 @@ import KyndallPitch from './pages/KyndallPitch';
 import ThinkBeautifulPitch from './pages/ThinkBeautifulPitch';
 import MizanaReactsPitch from './pages/MizanaReactsPitch';
 import BennettMeltPitch from './pages/BennettMeltPitch';
+import Thumbnails from './pages/Thumbnails';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -27,6 +28,7 @@ function App() {
             <Route path="/think-beautiful" element={<ThinkBeautifulPitch />} />
             <Route path="/mizana-reacts" element={<MizanaReactsPitch />} />
             <Route path="/bennett-melt" element={<BennettMeltPitch />} />
+            <Route path="/thumbnails" element={<Thumbnails />} />
             <Route path="/login" element={<Login />} />
             <Route 
               path="/admin" 

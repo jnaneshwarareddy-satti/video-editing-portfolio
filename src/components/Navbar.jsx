@@ -19,6 +19,7 @@ const Navbar = () => {
     { name: 'Home', path: '/' },
     { name: 'Short Form', path: '/short-form' },
     { name: 'Long Form', path: '/long-form' },
+    { name: 'Thumbnails', path: '/thumbnails' },
   ];
 
   return (
