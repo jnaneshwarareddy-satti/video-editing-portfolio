@@ -20,6 +20,7 @@ const Navbar = () => {
     { name: 'Short Form', path: '/short-form' },
     { name: 'Long Form', path: '/long-form' },
     { name: 'Thumbnails', path: '/thumbnails' },
+    { name: 'Faceless Thumbnails', path: '/faceless-thumbnails' },
   ];
 
   return (

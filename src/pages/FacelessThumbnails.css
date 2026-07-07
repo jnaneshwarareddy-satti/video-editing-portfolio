@@ -1,0 +1,156 @@
+.faceless-page {
+  min-height: 100vh;
+  padding-top: 100px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.faceless-hero {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 4rem 2rem 2rem 2rem;
+}
+
+.faceless-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.faceless-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.faceless-skills {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+
+.faceless-skill-badge {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.faceless-grid-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+.faceless-thumbnail-wrapper {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: transform 0.3s ease;
+}
+
+.faceless-thumbnail-wrapper:hover {
+  transform: translateY(-5px);
+}
+
+.faceless-thumbnail-wrapper img {
+  width: 100%;
+  display: block;
+}
+
+/* Pricing Section */
+.faceless-pricing-section {
+  margin-top: 4rem;
+}
+
+.faceless-pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.faceless-pricing-card {
+  padding: 2.5rem;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.faceless-premium-card {
+  background: linear-gradient(145deg, rgba(236, 72, 153, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+  border: 1px solid rgba(236, 72, 153, 0.2);
+}
+
+.faceless-premium-badge {
+  position: absolute;
+  top: 1rem;
+  right: -2rem;
+  background: var(--accent-gradient);
+  color: white;
+  padding: 0.5rem 3rem;
+  transform: rotate(45deg);
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.faceless-pricing-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.faceless-pricing-header h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.faceless-price {
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+.faceless-price span {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.faceless-pricing-desc {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: var(--accent);
+}
+
+.faceless-pricing-features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 2.5rem;
+  flex: 1;
+}
+
+.faceless-pricing-features li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
