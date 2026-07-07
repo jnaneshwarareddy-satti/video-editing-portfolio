@@ -100,6 +100,35 @@ const Thumbnails = () => {
         </div>
       </section>
 
+      {/* Complete Portfolio Grid Section */}
+      <section className="section-padding" style={{ paddingTop: '0' }}>
+        <div className="container">
+          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '3rem' }}>More of My Work</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+            {[
+              "1782100834465-019eed7c-1559-78bc-aaf8-9f4685f9035b.jpg",
+              "5jF5J7RV0KE-HD.jpg",
+              "bennett-after.jpg",
+              "bennett-before.jpg",
+              "faceless-thumbnails.png",
+              "latestthumbnail (1).png",
+              "magicthumb_meghanmarkle.jpg",
+              "meghanmarklethumbnail (1).jpg",
+              "meghanmarklethumbnail (2).jpg",
+              "meghanmarklethumbnail.jpg",
+              "thumbnail-f9d9b037-d96f-494a-8221-f66ebd8d2263.png",
+              "thumbnail_story_driven_v5.jpg",
+              "vidiq_thumbnail_1 (2).png",
+              "vidiq_thumbnail_1 (3).png"
+            ].map((imgSrc, index) => (
+              <div key={index} style={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <img src={`/${imgSrc}`} alt={`Portfolio Item ${index + 1}`} style={{ width: '100%', display: 'block', transition: 'transform 0.3s ease' }} onMouseOver={e => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Section */}
       <section className="thumbnails-pricing-section section-padding glass-panel" id="pricing" style={{ borderRadius: '40px 40px 0 0', borderBottom: 'none' }}>
         <div className="container">
