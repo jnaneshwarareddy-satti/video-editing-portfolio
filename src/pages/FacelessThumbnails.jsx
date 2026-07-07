@@ -32,18 +32,26 @@ const FacelessThumbnails = () => {
         <div className="container">
           <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '3rem' }}>Latest Viral Thumbnails</h2>
           <div className="faceless-grid-section">
-            <div className="faceless-thumbnail-wrapper">
-              <img src="/meghanmarklethumbnail.jpg" alt="Faceless Thumbnail Example 1" />
-            </div>
-            <div className="faceless-thumbnail-wrapper">
-              <img src="/meghanmarklethumbnail (1).jpg" alt="Faceless Thumbnail Example 2" />
-            </div>
-            <div className="faceless-thumbnail-wrapper">
-              <img src="/meghanmarklethumbnail (2).jpg" alt="Faceless Thumbnail Example 3" />
-            </div>
-            <div className="faceless-thumbnail-wrapper">
-              <img src="/1782100834465-019eed7c-1559-78bc-aaf8-9f4685f9035b.jpg" alt="Faceless Thumbnail Example 4" />
-            </div>
+            {[
+              "1782100834465-019eed7c-1559-78bc-aaf8-9f4685f9035b.jpg",
+              "5jF5J7RV0KE-HD.jpg",
+              "bennett-after.jpg",
+              "bennett-before.jpg",
+              "faceless-thumbnails.png",
+              "latestthumbnail (1).png",
+              "magicthumb_meghanmarkle.jpg",
+              "meghanmarklethumbnail (1).jpg",
+              "meghanmarklethumbnail (2).jpg",
+              "meghanmarklethumbnail.jpg",
+              "thumbnail-f9d9b037-d96f-494a-8221-f66ebd8d2263.png",
+              "thumbnail_story_driven_v5.jpg",
+              "vidiq_thumbnail_1 (2).png",
+              "vidiq_thumbnail_1 (3).png"
+            ].map((imgSrc, index) => (
+              <div key={index} className="faceless-thumbnail-wrapper">
+                <img src={`/${imgSrc}`} alt={`Thumbnail Work ${index + 1}`} />
+              </div>
+            ))}
           </div>
         </div>
       </section>
