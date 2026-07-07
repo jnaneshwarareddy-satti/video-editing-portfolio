@@ -20,7 +20,7 @@ const Thumbnails = () => {
           <span className="text-accent-gradient">Click-Worthy Thumbnails</span>
         </h1>
         <p className="thumbnails-subtitle">
-          I'm a YouTube thumbnail designer specializing in high-CTR thumbnails for reaction, gaming, and commentary channels. The difference between a click and a scroll-past.
+          I'm a faceless thumbnail expert specializing in high-CTR thumbnails for reaction, gaming, and commentary channels. The difference between a click and a scroll-past.
         </p>
         <div className="thumbnails-skills">
           {skills.map(skill => (
@@ -96,6 +96,19 @@ const Thumbnails = () => {
               </div>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* Recent Works Section */}
+      <section className="recent-works-section section-padding">
+        <div className="container">
+          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '3rem' }}>Latest Viral Thumbnails</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+            <img src="/meghanmarklethumbnail.jpg" alt="Recent Work 1" style={{ width: '100%', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }} />
+            <img src="/meghanmarklethumbnail (1).jpg" alt="Recent Work 2" style={{ width: '100%', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }} />
+            <img src="/meghanmarklethumbnail (2).jpg" alt="Recent Work 3" style={{ width: '100%', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }} />
+            <img src="/1782100834465-019eed7c-1559-78bc-aaf8-9f4685f9035b.jpg" alt="Recent Work 4" style={{ width: '100%', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }} />
           </div>
         </div>
       </section>
