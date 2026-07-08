@@ -12,6 +12,7 @@ import MizanaReactsPitch from './pages/MizanaReactsPitch';
 import BennettMeltPitch from './pages/BennettMeltPitch';
 import Thumbnails from './pages/Thumbnails';
 import FacelessThumbnails from './pages/FacelessThumbnails';
+import JoshuaPitch from './pages/JoshuaPitch';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="/bennett-melt" element={<BennettMeltPitch />} />
             <Route path="/thumbnails" element={<Thumbnails />} />
             <Route path="/faceless-thumbnails" element={<FacelessThumbnails />} />
+            <Route path="/joshua" element={<JoshuaPitch />} />
             <Route path="/login" element={<Login />} />
             <Route 
               path="/admin" 
