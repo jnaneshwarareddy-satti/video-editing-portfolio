@@ -104,7 +104,7 @@ const Thumbnails = () => {
       <section className="thumbnails-pricing-section section-padding glass-panel reveal" ref={addToRefs} id="pricing" style={{ borderRadius: '40px 40px 0 0', borderBottom: 'none' }}>
         <div className="container">
           <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '1rem' }}>Pricing</h2>
-          <p style={{ color: 'var(--text-secondary)', textAlign: 'center' }}>Transparent starter tier pricing (First 2 weeks).</p>
+          <p style={{ color: 'var(--text-secondary)', textAlign: 'center' }}>Transparent starter tier pricing.</p>
           
           <div className="pricing-grid">
             {/* Custom Package */}

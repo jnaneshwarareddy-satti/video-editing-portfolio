@@ -307,65 +307,6 @@ const Admin = () => {
     }
   };
 
-  const migrateHardcoded = async () => {
-    const hardcodedReaction = [
-      "vidiq_thumbnail_1 (2).png",
-      "vidiq_thumbnail_1 (3).png",
-      "thumbnail-f9d9b037-d96f-494a-8221-f66ebd8d2263.png"
-    ];
-    const hardcodedGaming = [
-      "bennett-after.jpg",
-      "bennett-before.jpg"
-    ];
-    const hardcodedFaceless = [
-      "1782100834465-019eed7c-1559-78bc-aaf8-9f4685f9035b.jpg",
-      "5jF5J7RV0KE-HD.jpg",
-      "faceless-thumbnails.png",
-      "latestthumbnail (1).png",
-      "magicthumb_meghanmarkle.jpg",
-      "meghanmarklethumbnail (1).jpg",
-      "meghanmarklethumbnail (2).jpg",
-      "meghanmarklethumbnail.jpg",
-      "thumbnail_story_driven_v5.jpg"
-    ];
-
-    if (!window.confirm("Are you sure? This will add all 14 hardcoded images to Firebase. Only click this ONCE.")) return;
-
-    setIsLoading(true);
-    try {
-      const allThumbs = [
-        ...hardcodedReaction.map(url => ({ title: "Reaction Thumbnail", redesignedUrl: "/" + url, category: "Reaction" })),
-        ...hardcodedGaming.map(url => ({ title: "Gaming Thumbnail", redesignedUrl: "/" + url, category: "Gaming" })),
-        ...hardcodedFaceless.map(url => ({ title: "Faceless Thumbnail", redesignedUrl: "/" + url, category: "YouTube Faceless" }))
-      ];
-
-      for (const t of allThumbs) {
-        await addDoc(thumbnailsCollectionRef, {
-          title: t.title,
-          originalVideoId: "",
-          redesignedUrl: t.redesignedUrl,
-          category: t.category,
-          createdAt: serverTimestamp()
-        });
-      }
-
-      const defaultCats = ["Reaction", "Gaming", "YouTube Faceless"];
-      for (let i = 0; i < defaultCats.length; i++) {
-        await addDoc(categoriesCollectionRef, {
-          name: defaultCats[i],
-          createdAt: new Date(Date.now() - i * 1000)
-        });
-      }
-
-      alert("Migration complete! Check the thumbnails tab.");
-      fetchData();
-    } catch (error) {
-      console.error(error);
-      alert("Error during migration");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="admin-page section-padding animate-fade-in">
@@ -373,9 +314,7 @@ const Admin = () => {
         <div className="admin-header">
           <h1 className="page-title text-gradient">Admin Dashboard</h1>
           <div style={{ display: 'flex', gap: '1rem' }}>
-            <button onClick={migrateHardcoded} className="btn-primary" style={{ background: '#f59e0b', borderColor: '#f59e0b' }}>
-              Migrate Old Data (Click Once)
-            </button>
+
             <button onClick={handleLogout} className="btn-outline logout-btn">
               <LogOut size={18} /> Logout
             </button>
@@ -459,24 +398,12 @@ const Admin = () => {
                   </div>
                   <div className="input-group">
                     <label>Category</label>
-                    {categories.length > 0 ? (
                       <select value={thumbCategory} onChange={(e) => setThumbCategory(e.target.value)} required style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', marginTop: '0.5rem' }}>
                         <option value="" disabled>Select a category</option>
-                        <option value="Reaction">Reaction</option>
-                        <option value="Gaming">Gaming</option>
-                        <option value="YouTube Faceless">YouTube Faceless</option>
                         {categories.map(cat => (
                           <option key={cat.id} value={cat.name}>{cat.name}</option>
                         ))}
                       </select>
-                    ) : (
-                      <select value={thumbCategory} onChange={(e) => setThumbCategory(e.target.value)} required style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', marginTop: '0.5rem' }}>
-                        <option value="" disabled>Select a category</option>
-                        <option value="Reaction">Reaction</option>
-                        <option value="Gaming">Gaming</option>
-                        <option value="YouTube Faceless">YouTube Faceless</option>
-                      </select>
-                    )}
                   </div>
                   <div className="form-actions">
                     <button type="submit" className="btn-primary" disabled={isUploading}>
@@ -540,9 +467,6 @@ const Admin = () => {
                     style={{ padding: '0.5rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }}
                   >
                     <option value="All">All Categories</option>
-                    <option value="Reaction">Reaction</option>
-                    <option value="Gaming">Gaming</option>
-                    <option value="YouTube Faceless">YouTube Faceless</option>
                     {categories.map(cat => (
                       <option key={cat.id} value={cat.name}>{cat.name}</option>
                     ))}
@@ -567,9 +491,6 @@ const Admin = () => {
                             style={{ padding: '0.2rem', borderRadius: '4px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--accent)', fontSize: '0.8rem' }}
                           >
                             <option value="" disabled>None</option>
-                            <option value="Reaction">Reaction</option>
-                            <option value="Gaming">Gaming</option>
-                            <option value="YouTube Faceless">YouTube Faceless</option>
                             {categories.map(cat => (
                               <option key={cat.id} value={cat.name}>{cat.name}</option>
                             ))}
