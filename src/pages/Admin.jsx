@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 import { db, auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
@@ -42,7 +42,8 @@ const Admin = () => {
       const vData = await getDocs(videosCollectionRef);
       setVideos(vData.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
 
-      const tData = await getDocs(thumbnailsCollectionRef);
+      const qThumbnails = query(thumbnailsCollectionRef, orderBy('createdAt', 'desc'));
+      const tData = await getDocs(qThumbnails);
       setThumbnails(tData.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
 
       const cData = await getDocs(categoriesCollectionRef);
