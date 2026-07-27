@@ -3,13 +3,14 @@ import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp
 import { signOut } from 'firebase/auth';
 import { db, auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Plus, Edit2, Trash2, Video, Image as ImageIcon } from 'lucide-react';
+import { LogOut, Plus, Edit2, Trash2, Video, Image as ImageIcon, Folder } from 'lucide-react';
 import './Admin.css';
 
 const Admin = () => {
-  const [activeTab, setActiveTab] = useState('videos'); // 'videos' or 'thumbnails'
+  const [activeTab, setActiveTab] = useState('videos'); // 'videos', 'thumbnails', or 'categories'
   const [videos, setVideos] = useState([]);
   const [thumbnails, setThumbnails] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   
   // Video Form State
@@ -23,11 +24,16 @@ const Admin = () => {
   const [thumbTitle, setThumbTitle] = useState('');
   const [thumbVideoUrl, setThumbVideoUrl] = useState('');
   const [thumbImageUrl, setThumbImageUrl] = useState('');
+  const [thumbCategory, setThumbCategory] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   
+  // Category Form State
+  const [categoryName, setCategoryName] = useState('');
+
   const navigate = useNavigate();
   const videosCollectionRef = collection(db, 'videos');
   const thumbnailsCollectionRef = collection(db, 'thumbnails');
+  const categoriesCollectionRef = collection(db, 'thumbnail_categories');
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -37,6 +43,9 @@ const Admin = () => {
 
       const tData = await getDocs(thumbnailsCollectionRef);
       setThumbnails(tData.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+
+      const cData = await getDocs(categoriesCollectionRef);
+      setCategories(cData.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -128,6 +137,10 @@ const Admin = () => {
       alert("Please enter the redesigned thumbnail URL.");
       return;
     }
+    if (!thumbCategory) {
+      alert("Please select a category for this thumbnail.");
+      return;
+    }
 
     setIsUploading(true);
     try {
@@ -135,6 +148,7 @@ const Admin = () => {
         title: thumbTitle,
         originalVideoId: videoId,
         redesignedUrl: thumbImageUrl,
+        category: thumbCategory,
         createdAt: serverTimestamp(),
       };
       
@@ -143,6 +157,7 @@ const Admin = () => {
       setThumbTitle('');
       setThumbVideoUrl('');
       setThumbImageUrl('');
+      setThumbCategory('');
       e.target.reset();
       
       fetchData();
@@ -161,6 +176,35 @@ const Admin = () => {
         fetchData();
       } catch (error) {
         console.error("Error deleting thumbnail:", error);
+      }
+    }
+  };
+
+  // --- CATEGORY HANDLERS ---
+  const handleCategorySubmit = async (e) => {
+    e.preventDefault();
+    if (!categoryName.trim()) return;
+
+    try {
+      await addDoc(categoriesCollectionRef, {
+        name: categoryName.trim(),
+        createdAt: serverTimestamp()
+      });
+      setCategoryName('');
+      fetchData();
+    } catch (error) {
+      console.error("Error saving category:", error);
+      alert("Failed to save category.");
+    }
+  };
+
+  const handleCategoryDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this category? Note: Thumbnails using this category won't be deleted, but may not show correctly if the category is missing.")) {
+      try {
+        await deleteDoc(doc(db, 'thumbnail_categories', id));
+        fetchData();
+      } catch (error) {
+        console.error("Error deleting category:", error);
       }
     }
   };
@@ -190,21 +234,28 @@ const Admin = () => {
             onClick={() => setActiveTab('videos')}
             style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, justifyContent: 'center', background: activeTab === 'videos' ? 'var(--accent)' : 'transparent', color: activeTab === 'videos' ? 'white' : 'var(--text-primary)' }}
           >
-            <Video size={18} /> Manage Videos
+            <Video size={18} /> Videos
           </button>
           <button 
             className={`btn-outline ${activeTab === 'thumbnails' ? 'active' : ''}`}
             onClick={() => setActiveTab('thumbnails')}
             style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, justifyContent: 'center', background: activeTab === 'thumbnails' ? 'var(--accent)' : 'transparent', color: activeTab === 'thumbnails' ? 'white' : 'var(--text-primary)' }}
           >
-            <ImageIcon size={18} /> Manage Thumbnails
+            <ImageIcon size={18} /> Thumbnails
+          </button>
+          <button 
+            className={`btn-outline ${activeTab === 'categories' ? 'active' : ''}`}
+            onClick={() => setActiveTab('categories')}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, justifyContent: 'center', background: activeTab === 'categories' ? 'var(--accent)' : 'transparent', color: activeTab === 'categories' ? 'white' : 'var(--text-primary)' }}
+          >
+            <Folder size={18} /> Categories
           </button>
         </div>
 
         <div className="admin-grid">
           {/* Form Section */}
           <div className="admin-card glass-panel form-panel">
-            {activeTab === 'videos' ? (
+            {activeTab === 'videos' && (
               <>
                 <h2>{isVideoEditing ? 'Edit Video' : 'Add New Video'}</h2>
                 <form onSubmit={handleVideoSubmit} className="admin-form">
@@ -233,7 +284,9 @@ const Admin = () => {
                   </div>
                 </form>
               </>
-            ) : (
+            )}
+
+            {activeTab === 'thumbnails' && (
               <>
                 <h2>Add Thumbnail Redesign</h2>
                 <form onSubmit={handleThumbnailSubmit} className="admin-form">
@@ -250,9 +303,47 @@ const Admin = () => {
                     <input type="text" value={thumbImageUrl} onChange={(e) => setThumbImageUrl(e.target.value)} required placeholder="e.g., /thumb1.jpg or https://imgur.com/..." />
                     <p style={{fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.5rem'}}>Put the image in your public folder and type the path (e.g. /thumb1.jpg)</p>
                   </div>
+                  <div className="input-group">
+                    <label>Category</label>
+                    {categories.length > 0 ? (
+                      <select value={thumbCategory} onChange={(e) => setThumbCategory(e.target.value)} required style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', marginTop: '0.5rem' }}>
+                        <option value="" disabled>Select a category</option>
+                        <option value="Reaction">Reaction</option>
+                        <option value="Gaming">Gaming</option>
+                        <option value="YouTube Faceless">YouTube Faceless</option>
+                        {categories.map(cat => (
+                          <option key={cat.id} value={cat.name}>{cat.name}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <select value={thumbCategory} onChange={(e) => setThumbCategory(e.target.value)} required style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', marginTop: '0.5rem' }}>
+                        <option value="" disabled>Select a category</option>
+                        <option value="Reaction">Reaction</option>
+                        <option value="Gaming">Gaming</option>
+                        <option value="YouTube Faceless">YouTube Faceless</option>
+                      </select>
+                    )}
+                  </div>
                   <div className="form-actions">
                     <button type="submit" className="btn-primary" disabled={isUploading}>
                       {isUploading ? 'Saving...' : <><Plus size={18} /> Add Thumbnail</>}
+                    </button>
+                  </div>
+                </form>
+              </>
+            )}
+
+            {activeTab === 'categories' && (
+              <>
+                <h2>Add Thumbnail Category</h2>
+                <form onSubmit={handleCategorySubmit} className="admin-form">
+                  <div className="input-group">
+                    <label>Category Name</label>
+                    <input type="text" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} required placeholder="e.g. Vlogs, Documentaries" />
+                  </div>
+                  <div className="form-actions">
+                    <button type="submit" className="btn-primary">
+                      <Plus size={18} /> Add Category
                     </button>
                   </div>
                 </form>
@@ -262,7 +353,7 @@ const Admin = () => {
 
           {/* List Section */}
           <div className="admin-card glass-panel list-panel">
-            <h2>{activeTab === 'videos' ? 'Manage Videos' : 'Manage Thumbnails'}</h2>
+            <h2>{activeTab === 'videos' ? 'Manage Videos' : activeTab === 'thumbnails' ? 'Manage Thumbnails' : 'Manage Categories'}</h2>
             {isLoading ? (
               <p>Loading...</p>
             ) : activeTab === 'videos' ? (
@@ -285,7 +376,7 @@ const Admin = () => {
                   ))}
                 </div>
               )
-            ) : (
+            ) : activeTab === 'thumbnails' ? (
               thumbnails.length === 0 ? <p>No thumbnails found.</p> : (
                 <div className="video-list" style={{ gap: '1rem', display: 'flex', flexDirection: 'column' }}>
                   {thumbnails.map(thumb => (
@@ -293,10 +384,25 @@ const Admin = () => {
                       <img src={thumb.redesignedUrl} alt="thumbnail" style={{ width: '80px', height: '45px', objectFit: 'cover', borderRadius: '4px' }} />
                       <div className="video-details" style={{ flex: 1 }}>
                         <h4 className="video-list-title">{thumb.title}</h4>
-                        <p className="video-list-id">Original ID: {thumb.originalVideoId}</p>
+                        <p className="video-list-id" style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>Category: {thumb.category || 'None'}</p>
                       </div>
                       <div className="video-actions">
                         <button onClick={() => handleThumbnailDelete(thumb.id)} className="action-btn delete-btn"><Trash2 size={18} /></button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            ) : (
+              categories.length === 0 ? <p>No custom categories found. (Default ones: Reaction, Gaming, YouTube Faceless)</p> : (
+                <div className="video-list" style={{ gap: '1rem', display: 'flex', flexDirection: 'column' }}>
+                  {categories.map(cat => (
+                    <div key={cat.id} className="video-list-item" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                      <div className="video-details" style={{ flex: 1 }}>
+                        <h4 className="video-list-title">{cat.name}</h4>
+                      </div>
+                      <div className="video-actions">
+                        <button onClick={() => handleCategoryDelete(cat.id)} className="action-btn delete-btn"><Trash2 size={18} /></button>
                       </div>
                     </div>
                   ))}
