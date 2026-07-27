@@ -3,7 +3,7 @@ import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp
 import { signOut } from 'firebase/auth';
 import { db, auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Plus, Edit2, Trash2, Video, Image as ImageIcon, Folder } from 'lucide-react';
+import { LogOut, Plus, Edit2, Trash2, Video, Image as ImageIcon, Folder, ArrowUp, ArrowDown } from 'lucide-react';
 import './Admin.css';
 
 const Admin = () => {
@@ -193,6 +193,45 @@ const Admin = () => {
     } catch (error) {
       console.error("Error updating category:", error);
       alert("Failed to update category.");
+    }
+  };
+
+  const handleMoveUp = async (index, filteredThumbs) => {
+    if (index === 0) return; // Already at top
+    const current = filteredThumbs[index];
+    const above = filteredThumbs[index - 1];
+
+    try {
+      // Swap their createdAt timestamps to swap their order
+      const currentDoc = doc(db, 'thumbnails', current.id);
+      const aboveDoc = doc(db, 'thumbnails', above.id);
+      
+      const tempTime = current.createdAt;
+      await updateDoc(currentDoc, { createdAt: above.createdAt });
+      await updateDoc(aboveDoc, { createdAt: tempTime });
+      
+      fetchData();
+    } catch (error) {
+      console.error("Error swapping order:", error);
+    }
+  };
+
+  const handleMoveDown = async (index, filteredThumbs) => {
+    if (index === filteredThumbs.length - 1) return; // Already at bottom
+    const current = filteredThumbs[index];
+    const below = filteredThumbs[index + 1];
+
+    try {
+      const currentDoc = doc(db, 'thumbnails', current.id);
+      const belowDoc = doc(db, 'thumbnails', below.id);
+      
+      const tempTime = current.createdAt;
+      await updateDoc(currentDoc, { createdAt: below.createdAt });
+      await updateDoc(belowDoc, { createdAt: tempTime });
+      
+      fetchData();
+    } catch (error) {
+      console.error("Error swapping order:", error);
     }
   };
 
@@ -472,7 +511,7 @@ const Admin = () => {
                   <div className="video-list" style={{ gap: '1rem', display: 'flex', flexDirection: 'column' }}>
                     {thumbnails
                       .filter(t => filterCategory === 'All' || t.category === filterCategory)
-                      .map(thumb => (
+                      .map((thumb, index, arr) => (
                     <div key={thumb.id} className="video-list-item" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                       <img src={thumb.redesignedUrl} alt="thumbnail" style={{ width: '80px', height: '45px', objectFit: 'cover', borderRadius: '4px' }} />
                       <div className="video-details" style={{ flex: 1 }}>
@@ -494,7 +533,13 @@ const Admin = () => {
                           </select>
                         </div>
                       </div>
-                      <div className="video-actions">
+                      <div className="video-actions" style={{ display: 'flex', alignItems: 'center' }}>
+                        {filterCategory !== 'All' && (
+                          <div style={{ display: 'flex', gap: '0.2rem', marginRight: '0.5rem' }}>
+                            <button onClick={() => handleMoveUp(index, arr)} disabled={index === 0} className="action-btn" style={{ padding: '0.2rem', opacity: index === 0 ? 0.3 : 1, cursor: index === 0 ? 'not-allowed' : 'pointer' }}><ArrowUp size={16} /></button>
+                            <button onClick={() => handleMoveDown(index, arr)} disabled={index === arr.length - 1} className="action-btn" style={{ padding: '0.2rem', opacity: index === arr.length - 1 ? 0.3 : 1, cursor: index === arr.length - 1 ? 'not-allowed' : 'pointer' }}><ArrowDown size={16} /></button>
+                          </div>
+                        )}
                         <button onClick={() => handleThumbnailDelete(thumb.id)} className="action-btn delete-btn"><Trash2 size={18} /></button>
                       </div>
                     </div>

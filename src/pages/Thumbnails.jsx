@@ -45,14 +45,21 @@ const Thumbnails = () => {
       <SEO title="Thumbnail Design" description="High-CTR YouTube Thumbnails for Reaction, Gaming, and Faceless Channels." />
       
       {/* Hero Section */}
-      <section className="thumbnails-hero" style={{ padding: '2rem 2rem 0rem 2rem' }}>
-        <h1 className="thumbnails-title" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-          High-CTR <br />
-          <span className="text-accent-gradient">Click-Worthy Thumbnails</span>
-        </h1>
-        <p className="thumbnails-subtitle" style={{ fontSize: '1.1rem', maxWidth: '600px' }}>
-          I'm a YouTube thumbnail designer specializing in high-CTR thumbnails for reaction, gaming, and many more. The difference between a click and a scroll-past.
-        </p>
+      <section className="thumbnails-hero" style={{ padding: '2rem 2rem 2rem 2rem' }}>
+        <div style={{ flex: 1 }}>
+          <h1 className="thumbnails-title" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
+            High-CTR <br />
+            <span className="text-accent-gradient">Click-Worthy Thumbnails</span>
+          </h1>
+          <p className="thumbnails-subtitle" style={{ fontSize: '1.1rem', maxWidth: '600px', marginLeft: 0, marginBottom: 0 }}>
+            I'm a YouTube thumbnail designer specializing in high-CTR thumbnails for reaction, gaming, and many more. The difference between a click and a scroll-past.
+          </p>
+        </div>
+        <div>
+          <a href="mailto:jnaneshwarareddysatti@gmail.com?subject=Thumbnail Design Inquiry" className="btn-primary" style={{ whiteSpace: 'nowrap' }}>
+            Hire Me Today
+          </a>
+        </div>
       </section>
 
       {/* Complete Portfolio Grid Section */}
@@ -94,6 +101,22 @@ const Thumbnails = () => {
           <p style={{ color: 'var(--text-secondary)', textAlign: 'center' }}>Transparent starter tier pricing (First 2 weeks).</p>
           
           <div className="pricing-grid">
+            {/* Custom Package */}
+            <div className="pricing-card glass-panel premium-card">
+              <div className="premium-badge" style={{ background: 'var(--accent)' }}>Custom Quote</div>
+              <div className="pricing-header">
+                <h3>Custom</h3>
+                <div className="price" style={{ fontSize: '2rem' }}><span>Let's Talk</span></div>
+                <p className="pricing-desc">Tailored to your niche & volume</p>
+              </div>
+              <ul className="pricing-features">
+                <li><CheckCircle size={18} color="var(--accent)" /> Volume Discounts</li>
+                <li><CheckCircle size={18} color="var(--accent)" /> Custom Turnaround Times</li>
+                <li><CheckCircle size={18} color="var(--accent)" /> Strategy & A/B Testing</li>
+              </ul>
+              <a href="mailto:jnaneshwarareddysatti@gmail.com?subject=Custom Thumbnail Package" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Get a Quote</a>
+            </div>
+
             {/* Basic Package */}
             <div className="pricing-card glass-panel" style={{ background: 'rgba(0,0,0,0.2)' }}>
               <div className="pricing-header">
@@ -145,8 +168,20 @@ const Thumbnails = () => {
         </div>
       </section>
 
+      {/* Tools Section */}
+      <section className="section-padding" style={{ paddingTop: '4rem', paddingBottom: '1rem', textAlign: 'center' }}>
+        <div className="container">
+          <h3 style={{ fontSize: '1.5rem', color: 'var(--text-primary)', marginBottom: '1.5rem' }}>Tools of the Trade</h3>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <span className="software-badge" style={{ padding: '0.8rem 1.5rem', fontSize: '1rem' }}>Adobe Photoshop</span>
+            <span className="software-badge" style={{ padding: '0.8rem 1.5rem', fontSize: '1rem' }}>Canva Pro</span>
+            <span className="software-badge" style={{ padding: '0.8rem 1.5rem', fontSize: '1rem' }}>AI Tools</span>
+          </div>
+        </div>
+      </section>
+
       {/* Skills Section at Bottom */}
-      <section className="section-padding" style={{ paddingTop: '3rem', paddingBottom: '3rem', textAlign: 'center' }}>
+      <section className="section-padding" style={{ paddingTop: '1rem', paddingBottom: '3rem', textAlign: 'center' }}>
         <div className="container">
           <div className="thumbnails-skills">
             {skills.map(skill => (
