@@ -14,11 +14,15 @@ import Thumbnails from './pages/Thumbnails';
 import FacelessThumbnails from './pages/FacelessThumbnails';
 import JoshuaPitch from './pages/JoshuaPitch';
 import ProtectedRoute from './components/ProtectedRoute';
+import CustomCursor from './components/CustomCursor';
 import './App.css';
 
 function App() {
   return (
     <Router>
+      <CustomCursor />
+      <div className="bg-orb orb-1"></div>
+      <div className="bg-orb orb-2"></div>
       <div className="app-container">
         <Navbar />
         <main className="main-content">

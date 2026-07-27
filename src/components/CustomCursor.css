@@ -1,0 +1,40 @@
+.custom-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s ease;
+}
+
+.custom-cursor-outline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgba(236, 72, 153, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, transform 0.1s ease-out;
+}
+
+.custom-cursor-outline.expand {
+  width: 50px;
+  height: 50px;
+  border-color: rgba(236, 72, 153, 0.8);
+  background-color: rgba(236, 72, 153, 0.1);
+}
+
+@media (pointer: fine) {
+  body * {
+    cursor: none;
+  }
+}

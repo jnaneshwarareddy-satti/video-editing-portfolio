@@ -3,6 +3,8 @@ import { CheckCircle, Mail, MessageCircle, Camera } from 'lucide-react';
 import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import SEO from '../components/SEO';
+import BeforeAfterSlider from '../components/BeforeAfterSlider';
+import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import './Thumbnails.css';
 
 const Thumbnails = () => {
@@ -12,6 +14,7 @@ const Thumbnails = () => {
 
   const [dynamicThumbnails, setDynamicThumbnails] = useState([]);
   const [categories, setCategories] = useState(["Reaction", "Gaming", "YouTube Faceless"]);
+  const { addToRefs } = useIntersectionObserver();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,7 +48,7 @@ const Thumbnails = () => {
       <SEO title="Thumbnail Design" description="High-CTR YouTube Thumbnails for Reaction, Gaming, and Faceless Channels." />
       
       {/* Hero Section */}
-      <section className="thumbnails-hero" style={{ padding: '2rem 2rem 2rem 2rem' }}>
+      <section className="thumbnails-hero reveal" ref={addToRefs} style={{ padding: '2rem 2rem 2rem 2rem' }}>
         <div style={{ flex: 1 }}>
           <h1 className="thumbnails-title" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
             High-CTR <br />
@@ -63,7 +66,7 @@ const Thumbnails = () => {
       </section>
 
       {/* Complete Portfolio Grid Section */}
-      <section className="section-padding" style={{ paddingTop: '2rem' }}>
+      <section className="section-padding reveal" ref={addToRefs} style={{ paddingTop: '2rem' }}>
         <div className="container">
           
           {categories.map(category => {
@@ -81,8 +84,8 @@ const Thumbnails = () => {
                   {categoryThumbnails.map((imgSrc, index) => {
                     const finalSrc = imgSrc.startsWith('http') ? imgSrc : `/${imgSrc.replace(/^\//, '')}`;
                     return (
-                      <div key={`${category}-${index}`} style={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 8px 25px rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)' }}>
-                        <img src={finalSrc} alt={`${category} Thumbnail ${index + 1}`} style={{ width: '100%', display: 'block', transition: 'transform 0.3s ease' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.03)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'} />
+                      <div key={`${category}-${index}`} className="thumbnail-grid-item">
+                        <img src={finalSrc} alt={`${category} Thumbnail ${index + 1}`} />
                       </div>
                     );
                   })}
@@ -95,7 +98,7 @@ const Thumbnails = () => {
       </section>
 
       {/* Pricing Section */}
-      <section className="thumbnails-pricing-section section-padding glass-panel" id="pricing" style={{ borderRadius: '40px 40px 0 0', borderBottom: 'none' }}>
+      <section className="thumbnails-pricing-section section-padding glass-panel reveal" ref={addToRefs} id="pricing" style={{ borderRadius: '40px 40px 0 0', borderBottom: 'none' }}>
         <div className="container">
           <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '1rem' }}>Pricing</h2>
           <p style={{ color: 'var(--text-secondary)', textAlign: 'center' }}>Transparent starter tier pricing (First 2 weeks).</p>
@@ -168,8 +171,18 @@ const Thumbnails = () => {
         </div>
       </section>
 
+      {/* See the Difference Section */}
+      <section className="section-padding reveal" ref={addToRefs} style={{ paddingTop: '5rem', paddingBottom: '2rem' }}>
+        <div className="container">
+          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '3rem' }}>See the Difference</h2>
+          <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+            <BeforeAfterSlider beforeImage="/bennett-before.jpg" afterImage="/bennett-after.jpg" />
+          </div>
+        </div>
+      </section>
+
       {/* Tools Section */}
-      <section className="section-padding" style={{ paddingTop: '4rem', paddingBottom: '1rem', textAlign: 'center' }}>
+      <section className="section-padding reveal" ref={addToRefs} style={{ paddingTop: '4rem', paddingBottom: '1rem', textAlign: 'center' }}>
         <div className="container">
           <h3 style={{ fontSize: '1.5rem', color: 'var(--text-primary)', marginBottom: '1.5rem' }}>Tools of the Trade</h3>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>

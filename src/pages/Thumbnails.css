@@ -219,3 +219,27 @@
   color: var(--text-secondary);
   font-size: 0.95rem;
 }
+
+.thumbnail-grid-item {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: var(--transition-smooth);
+}
+
+.thumbnail-grid-item img {
+  width: 100%;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.thumbnail-grid-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(236, 72, 153, 0.2);
+  border-color: rgba(236, 72, 153, 0.4);
+}
+
+.thumbnail-grid-item:hover img {
+  transform: scale(1.05);
+}
