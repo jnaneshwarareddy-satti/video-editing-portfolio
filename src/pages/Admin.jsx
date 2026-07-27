@@ -127,12 +127,16 @@ const Admin = () => {
   // --- THUMBNAIL HANDLERS ---
   const handleThumbnailSubmit = async (e) => {
     e.preventDefault();
-    const videoId = extractVideoId(thumbVideoUrl);
     
-    if (!videoId) {
-      alert("Invalid YouTube URL or ID");
-      return;
+    let videoId = '';
+    if (thumbVideoUrl) {
+      videoId = extractVideoId(thumbVideoUrl);
+      if (!videoId) {
+        alert("Invalid YouTube URL or ID");
+        return;
+      }
     }
+    
     if (!thumbImageUrl) {
       alert("Please enter the redesigned thumbnail URL.");
       return;
@@ -295,8 +299,8 @@ const Admin = () => {
                     <input type="text" value={thumbTitle} onChange={(e) => setThumbTitle(e.target.value)} required placeholder="e.g. Think Beautiful - Drama Hook" />
                   </div>
                   <div className="input-group">
-                    <label>Original YouTube URL (For "Before")</label>
-                    <input type="text" value={thumbVideoUrl} onChange={(e) => setThumbVideoUrl(e.target.value)} required placeholder="https://www.youtube.com/watch?v=..." />
+                    <label>Original YouTube URL (Optional - For Before/After)</label>
+                    <input type="text" value={thumbVideoUrl} onChange={(e) => setThumbVideoUrl(e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
                   </div>
                   <div className="input-group">
                     <label>Redesigned Thumbnail URL (For "After")</label>
