@@ -19,13 +19,16 @@ const Thumbnails = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch Categories
-        const cSnap = await getDocs(collection(db, 'thumbnail_categories'));
-        const customCats = cSnap.docs.map(doc => doc.data().name);
+        // Fetch Categories with Ordering
+        const cq = query(collection(db, 'thumbnail_categories'), orderBy('createdAt', 'desc'));
+        const cSnap = await getDocs(cq);
+        const fetchedCats = cSnap.docs.map(doc => doc.data().name);
         
-        // Merge default and custom categories, remove duplicates
-        const allCats = Array.from(new Set(["Reaction", "Gaming", "YouTube Faceless", ...customCats]));
-        setCategories(allCats);
+        if (fetchedCats.length === 0) {
+          setCategories(["Reaction", "Gaming", "YouTube Faceless"]);
+        } else {
+          setCategories(fetchedCats);
+        }
 
         // Fetch Thumbnails
         const q = query(collection(db, 'thumbnails'), orderBy('createdAt', 'desc'));

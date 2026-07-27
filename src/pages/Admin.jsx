@@ -46,7 +46,8 @@ const Admin = () => {
       const tData = await getDocs(qThumbnails);
       setThumbnails(tData.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
 
-      const cData = await getDocs(categoriesCollectionRef);
+      const qCategories = query(categoriesCollectionRef, orderBy('createdAt', 'desc'));
+      const cData = await getDocs(qCategories);
       setCategories(cData.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -265,6 +266,38 @@ const Admin = () => {
     }
   };
 
+  const handleCategoryMoveUp = async (index, cats) => {
+    if (index === 0) return;
+    const current = cats[index];
+    const above = cats[index - 1];
+    try {
+      const currentDoc = doc(db, 'thumbnail_categories', current.id);
+      const aboveDoc = doc(db, 'thumbnail_categories', above.id);
+      const tempTime = current.createdAt;
+      await updateDoc(currentDoc, { createdAt: above.createdAt });
+      await updateDoc(aboveDoc, { createdAt: tempTime });
+      fetchData();
+    } catch (error) {
+      console.error("Error swapping category order:", error);
+    }
+  };
+
+  const handleCategoryMoveDown = async (index, cats) => {
+    if (index === cats.length - 1) return;
+    const current = cats[index];
+    const below = cats[index + 1];
+    try {
+      const currentDoc = doc(db, 'thumbnail_categories', current.id);
+      const belowDoc = doc(db, 'thumbnail_categories', below.id);
+      const tempTime = current.createdAt;
+      await updateDoc(currentDoc, { createdAt: below.createdAt });
+      await updateDoc(belowDoc, { createdAt: tempTime });
+      fetchData();
+    } catch (error) {
+      console.error("Error swapping category order:", error);
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -315,6 +348,15 @@ const Admin = () => {
           createdAt: serverTimestamp()
         });
       }
+
+      const defaultCats = ["Reaction", "Gaming", "YouTube Faceless"];
+      for (let i = 0; i < defaultCats.length; i++) {
+        await addDoc(categoriesCollectionRef, {
+          name: defaultCats[i],
+          createdAt: new Date(Date.now() - i * 1000)
+        });
+      }
+
       alert("Migration complete! Check the thumbnails tab.");
       fetchData();
     } catch (error) {
@@ -551,12 +593,16 @@ const Admin = () => {
             ) : (
               categories.length === 0 ? <p>No custom categories found. (Default ones: Reaction, Gaming, YouTube Faceless)</p> : (
                 <div className="video-list" style={{ gap: '1rem', display: 'flex', flexDirection: 'column' }}>
-                  {categories.map(cat => (
+                  {categories.map((cat, index, arr) => (
                     <div key={cat.id} className="video-list-item" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                       <div className="video-details" style={{ flex: 1 }}>
                         <h4 className="video-list-title">{cat.name}</h4>
                       </div>
-                      <div className="video-actions">
+                      <div className="video-actions" style={{ display: 'flex', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', gap: '0.2rem', marginRight: '0.5rem' }}>
+                          <button onClick={() => handleCategoryMoveUp(index, arr)} disabled={index === 0} className="action-btn" style={{ padding: '0.2rem', opacity: index === 0 ? 0.3 : 1, cursor: index === 0 ? 'not-allowed' : 'pointer' }}><ArrowUp size={16} /></button>
+                          <button onClick={() => handleCategoryMoveDown(index, arr)} disabled={index === arr.length - 1} className="action-btn" style={{ padding: '0.2rem', opacity: index === arr.length - 1 ? 0.3 : 1, cursor: index === arr.length - 1 ? 'not-allowed' : 'pointer' }}><ArrowDown size={16} /></button>
+                        </div>
                         <button onClick={() => handleCategoryDelete(cat.id)} className="action-btn delete-btn"><Trash2 size={18} /></button>
                       </div>
                     </div>
