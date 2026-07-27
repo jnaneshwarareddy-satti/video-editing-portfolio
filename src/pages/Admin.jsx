@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { signOut } from 'firebase/auth';
-import { db, auth } from '../firebase';
+import { db, auth, storage } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Plus, Edit2, Trash2, Video, Image as ImageIcon, Folder } from 'lucide-react';
 import './Admin.css';
@@ -23,12 +24,13 @@ const Admin = () => {
   // Thumbnail Form State
   const [thumbTitle, setThumbTitle] = useState('');
   const [thumbVideoUrl, setThumbVideoUrl] = useState('');
-  const [thumbImageUrl, setThumbImageUrl] = useState('');
+  const [thumbFile, setThumbFile] = useState(null);
   const [thumbCategory, setThumbCategory] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   
   // Category Form State
   const [categoryName, setCategoryName] = useState('');
+  const [filterCategory, setFilterCategory] = useState('All');
 
   const navigate = useNavigate();
   const videosCollectionRef = collection(db, 'videos');
@@ -137,8 +139,8 @@ const Admin = () => {
       }
     }
     
-    if (!thumbImageUrl) {
-      alert("Please enter the redesigned thumbnail URL.");
+    if (!thumbFile) {
+      alert("Please select a thumbnail image to upload.");
       return;
     }
     if (!thumbCategory) {
@@ -148,10 +150,14 @@ const Admin = () => {
 
     setIsUploading(true);
     try {
+      const fileRef = ref(storage, `thumbnails/${Date.now()}_${thumbFile.name}`);
+      await uploadBytes(fileRef, thumbFile);
+      const downloadUrl = await getDownloadURL(fileRef);
+
       const payload = {
         title: thumbTitle,
         originalVideoId: videoId,
-        redesignedUrl: thumbImageUrl,
+        redesignedUrl: downloadUrl,
         category: thumbCategory,
         createdAt: serverTimestamp(),
       };
@@ -160,7 +166,7 @@ const Admin = () => {
       
       setThumbTitle('');
       setThumbVideoUrl('');
-      setThumbImageUrl('');
+      setThumbFile(null);
       setThumbCategory('');
       e.target.reset();
       
@@ -181,6 +187,17 @@ const Admin = () => {
       } catch (error) {
         console.error("Error deleting thumbnail:", error);
       }
+    }
+  };
+
+  const handleThumbnailCategoryChange = async (id, newCategory) => {
+    try {
+      const thumbDoc = doc(db, 'thumbnails', id);
+      await updateDoc(thumbDoc, { category: newCategory });
+      fetchData(); // Refresh the list
+    } catch (error) {
+      console.error("Error updating category:", error);
+      alert("Failed to update category.");
     }
   };
 
@@ -359,9 +376,8 @@ const Admin = () => {
                     <input type="text" value={thumbVideoUrl} onChange={(e) => setThumbVideoUrl(e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
                   </div>
                   <div className="input-group">
-                    <label>Redesigned Thumbnail URL (For "After")</label>
-                    <input type="text" value={thumbImageUrl} onChange={(e) => setThumbImageUrl(e.target.value)} required placeholder="e.g., /thumb1.jpg or https://imgur.com/..." />
-                    <p style={{fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.5rem'}}>Put the image in your public folder and type the path (e.g. /thumb1.jpg)</p>
+                    <label>Thumbnail Image Upload</label>
+                    <input type="file" accept="image/*" onChange={(e) => setThumbFile(e.target.files[0])} required style={{ padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', width: '100%', cursor: 'pointer' }} />
                   </div>
                   <div className="input-group">
                     <label>Category</label>
@@ -437,14 +453,50 @@ const Admin = () => {
                 </div>
               )
             ) : activeTab === 'thumbnails' ? (
-              thumbnails.length === 0 ? <p>No thumbnails found.</p> : (
-                <div className="video-list" style={{ gap: '1rem', display: 'flex', flexDirection: 'column' }}>
-                  {thumbnails.map(thumb => (
+              <>
+                <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <label style={{ color: 'var(--text-secondary)' }}>Filter by Category:</label>
+                  <select 
+                    value={filterCategory} 
+                    onChange={(e) => setFilterCategory(e.target.value)}
+                    style={{ padding: '0.5rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }}
+                  >
+                    <option value="All">All Categories</option>
+                    <option value="Reaction">Reaction</option>
+                    <option value="Gaming">Gaming</option>
+                    <option value="YouTube Faceless">YouTube Faceless</option>
+                    {categories.map(cat => (
+                      <option key={cat.id} value={cat.name}>{cat.name}</option>
+                    ))}
+                  </select>
+                </div>
+                {thumbnails.filter(t => filterCategory === 'All' || t.category === filterCategory).length === 0 ? (
+                  <p>No thumbnails found for this category.</p> 
+                ) : (
+                  <div className="video-list" style={{ gap: '1rem', display: 'flex', flexDirection: 'column' }}>
+                    {thumbnails
+                      .filter(t => filterCategory === 'All' || t.category === filterCategory)
+                      .map(thumb => (
                     <div key={thumb.id} className="video-list-item" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                       <img src={thumb.redesignedUrl} alt="thumbnail" style={{ width: '80px', height: '45px', objectFit: 'cover', borderRadius: '4px' }} />
                       <div className="video-details" style={{ flex: 1 }}>
                         <h4 className="video-list-title">{thumb.title}</h4>
-                        <p className="video-list-id" style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>Category: {thumb.category || 'None'}</p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem' }}>
+                          <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Category:</span>
+                          <select 
+                            value={thumb.category || ''} 
+                            onChange={(e) => handleThumbnailCategoryChange(thumb.id, e.target.value)}
+                            style={{ padding: '0.2rem', borderRadius: '4px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--accent)', fontSize: '0.8rem' }}
+                          >
+                            <option value="" disabled>None</option>
+                            <option value="Reaction">Reaction</option>
+                            <option value="Gaming">Gaming</option>
+                            <option value="YouTube Faceless">YouTube Faceless</option>
+                            {categories.map(cat => (
+                              <option key={cat.id} value={cat.name}>{cat.name}</option>
+                            ))}
+                          </select>
+                        </div>
                       </div>
                       <div className="video-actions">
                         <button onClick={() => handleThumbnailDelete(thumb.id)} className="action-btn delete-btn"><Trash2 size={18} /></button>
@@ -452,7 +504,8 @@ const Admin = () => {
                     </div>
                   ))}
                 </div>
-              )
+              )}
+              </>
             ) : (
               categories.length === 0 ? <p>No custom categories found. (Default ones: Reaction, Gaming, YouTube Faceless)</p> : (
                 <div className="video-list" style={{ gap: '1rem', display: 'flex', flexDirection: 'column' }}>
