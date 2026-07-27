@@ -28,7 +28,7 @@ const Navbar = () => {
       <div className="container navbar-container">
         <NavLink to="/" className="logo text-accent-gradient">
           <Clapperboard size={28} />
-          <span>EditorPro.</span>
+          <span>JreddyPro.</span>
         </NavLink>
 
         {/* Desktop Menu */}
