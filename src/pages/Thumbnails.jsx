@@ -1,6 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { CheckCircle, Image as ImageIcon, Sparkles, TrendingUp, Gamepad2, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { CheckCircle } from 'lucide-react';
+import { collection, query, orderBy, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
 import SEO from '../components/SEO';
 import './Thumbnails.css';
 
@@ -9,12 +10,45 @@ const Thumbnails = () => {
     "Thumbnail Design", "YouTube Thumbnails", "Photoshop", "Graphic Design", "YouTube Marketing", "CTR Optimization"
   ];
 
+  const hardcodedImages = [
+    "1782100834465-019eed7c-1559-78bc-aaf8-9f4685f9035b.jpg",
+    "5jF5J7RV0KE-HD.jpg",
+    "bennett-after.jpg",
+    "bennett-before.jpg",
+    "faceless-thumbnails.png",
+    "latestthumbnail (1).png",
+    "magicthumb_meghanmarkle.jpg",
+    "meghanmarklethumbnail (1).jpg",
+    "meghanmarklethumbnail (2).jpg",
+    "meghanmarklethumbnail.jpg",
+    "thumbnail-f9d9b037-d96f-494a-8221-f66ebd8d2263.png",
+    "thumbnail_story_driven_v5.jpg",
+    "vidiq_thumbnail_1 (2).png",
+    "vidiq_thumbnail_1 (3).png"
+  ];
+
+  const [dynamicThumbnails, setDynamicThumbnails] = useState([]);
+
+  useEffect(() => {
+    const fetchThumbnails = async () => {
+      try {
+        const q = query(collection(db, 'thumbnails'), orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+        const fetched = snapshot.docs.map(doc => doc.data().redesignedUrl);
+        setDynamicThumbnails(fetched);
+      } catch (error) {
+        console.error("Error fetching dynamic thumbnails:", error);
+      }
+    };
+    fetchThumbnails();
+  }, []);
+
   return (
     <div className="thumbnails-page animate-fade-in">
       <SEO title="Thumbnail Design" description="High-CTR YouTube Thumbnails for Reaction and Gaming Channels." />
       
       {/* Hero Section */}
-      <section className="thumbnails-hero">
+      <section className="thumbnails-hero" style={{ padding: '2rem 2rem 1rem 2rem' }}>
         <h1 className="thumbnails-title">
           High-CTR <br />
           <span className="text-accent-gradient">Click-Worthy Thumbnails</span>
@@ -22,106 +56,23 @@ const Thumbnails = () => {
         <p className="thumbnails-subtitle">
           I'm a YouTube thumbnail designer specializing in high-CTR thumbnails for reaction, gaming, and commentary channels. The difference between a click and a scroll-past.
         </p>
-        <div className="thumbnails-skills">
-          {skills.map(skill => (
-            <span key={skill} className="skill-badge">{skill}</span>
-          ))}
-        </div>
-      </section>
-
-      {/* Main Content Section */}
-      <section className="section-padding" style={{ paddingTop: '0' }}>
-        <div className="container">
-          <div className="thumbnails-gigs">
-            
-            {/* Gig 1: Reaction/Commentary */}
-            <div className="gig-section">
-              <div className="gig-content">
-                <h2>Reaction & Commentary</h2>
-                <p>
-                  I design thumbnails built around real emotional hooks pulled from your content—not generic templates—using proven high-CTR principles like facial expression, contrast, clean typography, and curiosity gap.
-                </p>
-                <ul className="gig-features">
-                  <li><CheckCircle size={18} color="var(--accent)" /> Real reaction/emotion-driven composition</li>
-                  <li><CheckCircle size={18} color="var(--accent)" /> 16:9 YouTube-ready exports</li>
-                  <li><CheckCircle size={18} color="var(--accent)" /> Fast 24-48 hour delivery</li>
-                  <li><CheckCircle size={18} color="var(--accent)" /> Tailored to your channel's specific audience</li>
-                </ul>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                  <em>Perfect for: Reaction channels, commentary, tabloid content, movie/TV reaction creators.</em>
-                </p>
-              </div>
-              <div className="gig-visuals">
-                <div style={{ position: 'relative' }}>
-                  <img src="/thumbnail-f9d9b037-d96f-494a-8221-f66ebd8d2263.png" alt="Reaction Thumbnail 1" />
-                  <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.7)', padding: '5px 10px', borderRadius: '8px', fontSize: '0.8rem' }}>Variation 1</div>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                  <div style={{ position: 'relative' }}>
-                    <img src="/vidiq_thumbnail_1 (2).png" alt="Reaction Thumbnail 2" />
-                  </div>
-                  <div style={{ position: 'relative' }}>
-                    <img src="/vidiq_thumbnail_1 (3).png" alt="Reaction Thumbnail 3" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Gig 2: Gaming */}
-            <div className="gig-section" style={{ marginTop: '3rem' }}>
-              <div className="gig-visuals" style={{ order: -1 }}>
-                 <div className="gig-comparison">
-                  <span className="gig-comparison-label">Before</span>
-                  <img src="/bennett-before.jpg" alt="Gaming Thumbnail Before" />
-                </div>
-                <div className="gig-comparison">
-                  <span className="gig-comparison-label" style={{ color: 'var(--accent)' }}>After (Redesign)</span>
-                  <img src="/bennett-after.jpg" alt="Gaming Thumbnail After" />
-                </div>
-              </div>
-              <div className="gig-content">
-                <h2>Realistic In-Game Gaming</h2>
-                <p>
-                  Cinematic, in-game style gaming thumbnails inspired by top creators like Ludwig and Smii7y. I combine real gameplay assets with genuine reaction faces for maximum click-through.
-                </p>
-                <ul className="gig-features">
-                  <li><CheckCircle size={18} color="var(--accent)" /> In-game asset compositing</li>
-                  <li><CheckCircle size={18} color="var(--accent)" /> Reaction photo integration</li>
-                  <li><CheckCircle size={18} color="var(--accent)" /> Bold, readable typography</li>
-                  <li><CheckCircle size={18} color="var(--accent)" /> Fast turnaround</li>
-                </ul>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                  <em>Send me a gameplay screenshot + your reaction photo and I'll build the concept.</em>
-                </p>
-              </div>
-            </div>
-
-          </div>
-        </div>
       </section>
 
       {/* Complete Portfolio Grid Section */}
-      <section className="section-padding" style={{ paddingTop: '0' }}>
+      <section className="section-padding" style={{ paddingTop: '1rem' }}>
         <div className="container">
-          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '3rem' }}>More of My Work</h2>
+          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '3rem' }}>My Previous Work</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
-            {[
-              "1782100834465-019eed7c-1559-78bc-aaf8-9f4685f9035b.jpg",
-              "5jF5J7RV0KE-HD.jpg",
-              "bennett-after.jpg",
-              "bennett-before.jpg",
-              "faceless-thumbnails.png",
-              "latestthumbnail (1).png",
-              "magicthumb_meghanmarkle.jpg",
-              "meghanmarklethumbnail (1).jpg",
-              "meghanmarklethumbnail (2).jpg",
-              "meghanmarklethumbnail.jpg",
-              "thumbnail-f9d9b037-d96f-494a-8221-f66ebd8d2263.png",
-              "thumbnail_story_driven_v5.jpg",
-              "vidiq_thumbnail_1 (2).png",
-              "vidiq_thumbnail_1 (3).png"
-            ].map((imgSrc, index) => (
-              <div key={index} style={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.05)' }}>
+            {/* Dynamic Thumbnails from Admin */}
+            {dynamicThumbnails.map((imgSrc, index) => (
+              <div key={`dyn-${index}`} style={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <img src={imgSrc.startsWith('http') ? imgSrc : `/${imgSrc.replace(/^\//, '')}`} alt={`Portfolio Item Dynamic ${index + 1}`} style={{ width: '100%', display: 'block', transition: 'transform 0.3s ease' }} onMouseOver={e => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'} />
+              </div>
+            ))}
+            
+            {/* Hardcoded Thumbnails */}
+            {hardcodedImages.map((imgSrc, index) => (
+              <div key={`static-${index}`} style={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.05)' }}>
                 <img src={`/${imgSrc}`} alt={`Portfolio Item ${index + 1}`} style={{ width: '100%', display: 'block', transition: 'transform 0.3s ease' }} onMouseOver={e => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'} />
               </div>
             ))}
@@ -130,7 +81,7 @@ const Thumbnails = () => {
       </section>
 
       {/* Pricing Section */}
-      <section className="thumbnails-pricing-section section-padding glass-panel" id="pricing" style={{ borderRadius: '40px 40px 0 0', borderBottom: 'none' }}>
+      <section className="thumbnails-pricing-section section-padding glass-panel" id="pricing" style={{ borderRadius: '40px 40px 0 0', borderBottom: 'none', marginTop: '2rem' }}>
         <div className="container">
           <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '1rem' }}>Pricing</h2>
           <p style={{ color: 'var(--text-secondary)', textAlign: 'center' }}>Transparent starter tier pricing (First 2 weeks).</p>
@@ -184,6 +135,17 @@ const Thumbnails = () => {
             </div>
           </div>
           
+        </div>
+      </section>
+      
+      {/* Skills Section at Bottom */}
+      <section className="section-padding" style={{ paddingTop: '3rem', paddingBottom: '4rem', textAlign: 'center' }}>
+        <div className="container">
+          <div className="thumbnails-skills">
+            {skills.map(skill => (
+              <span key={skill} className="skill-badge">{skill}</span>
+            ))}
+          </div>
         </div>
       </section>
 
