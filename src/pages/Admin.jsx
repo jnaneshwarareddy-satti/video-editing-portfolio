@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { signOut } from 'firebase/auth';
-import { db, auth, storage } from '../firebase';
+import { db, auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Plus, Edit2, Trash2, Video, Image as ImageIcon, Folder } from 'lucide-react';
 import './Admin.css';
@@ -24,7 +23,7 @@ const Admin = () => {
   // Thumbnail Form State
   const [thumbTitle, setThumbTitle] = useState('');
   const [thumbVideoUrl, setThumbVideoUrl] = useState('');
-  const [thumbFile, setThumbFile] = useState(null);
+  const [thumbImageUrl, setThumbImageUrl] = useState('');
   const [thumbCategory, setThumbCategory] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   
@@ -139,8 +138,8 @@ const Admin = () => {
       }
     }
     
-    if (!thumbFile) {
-      alert("Please select a thumbnail image to upload.");
+    if (!thumbImageUrl) {
+      alert("Please enter the redesigned thumbnail URL.");
       return;
     }
     if (!thumbCategory) {
@@ -150,14 +149,10 @@ const Admin = () => {
 
     setIsUploading(true);
     try {
-      const fileRef = ref(storage, `thumbnails/${Date.now()}_${thumbFile.name}`);
-      await uploadBytes(fileRef, thumbFile);
-      const downloadUrl = await getDownloadURL(fileRef);
-
       const payload = {
         title: thumbTitle,
         originalVideoId: videoId,
-        redesignedUrl: downloadUrl,
+        redesignedUrl: thumbImageUrl,
         category: thumbCategory,
         createdAt: serverTimestamp(),
       };
@@ -166,7 +161,7 @@ const Admin = () => {
       
       setThumbTitle('');
       setThumbVideoUrl('');
-      setThumbFile(null);
+      setThumbImageUrl('');
       setThumbCategory('');
       e.target.reset();
       
@@ -376,8 +371,9 @@ const Admin = () => {
                     <input type="text" value={thumbVideoUrl} onChange={(e) => setThumbVideoUrl(e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
                   </div>
                   <div className="input-group">
-                    <label>Thumbnail Image Upload</label>
-                    <input type="file" accept="image/*" onChange={(e) => setThumbFile(e.target.files[0])} required style={{ padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', width: '100%', cursor: 'pointer' }} />
+                    <label>Redesigned Thumbnail URL (For "After")</label>
+                    <input type="text" value={thumbImageUrl} onChange={(e) => setThumbImageUrl(e.target.value)} required placeholder="e.g., /thumb1.jpg or https://imgur.com/..." />
+                    <p style={{fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.5rem'}}>Put the image in your public folder and type the path (e.g. /thumb1.jpg)</p>
                   </div>
                   <div className="input-group">
                     <label>Category</label>
