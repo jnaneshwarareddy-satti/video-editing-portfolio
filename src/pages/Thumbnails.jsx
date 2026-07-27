@@ -10,29 +10,6 @@ const Thumbnails = () => {
     "Thumbnail Design", "YouTube Thumbnails", "Photoshop", "Graphic Design", "YouTube Marketing", "CTR Optimization"
   ];
 
-  const hardcodedReaction = [
-    "vidiq_thumbnail_1 (2).png",
-    "vidiq_thumbnail_1 (3).png",
-    "thumbnail-f9d9b037-d96f-494a-8221-f66ebd8d2263.png"
-  ];
-
-  const hardcodedGaming = [
-    "bennett-after.jpg",
-    "bennett-before.jpg"
-  ];
-
-  const hardcodedFaceless = [
-    "1782100834465-019eed7c-1559-78bc-aaf8-9f4685f9035b.jpg",
-    "5jF5J7RV0KE-HD.jpg",
-    "faceless-thumbnails.png",
-    "latestthumbnail (1).png",
-    "magicthumb_meghanmarkle.jpg",
-    "meghanmarklethumbnail (1).jpg",
-    "meghanmarklethumbnail (2).jpg",
-    "meghanmarklethumbnail.jpg",
-    "thumbnail_story_driven_v5.jpg"
-  ];
-
   const [dynamicThumbnails, setDynamicThumbnails] = useState([]);
   const [categories, setCategories] = useState(["Reaction", "Gaming", "YouTube Faceless"]);
 
@@ -60,16 +37,7 @@ const Thumbnails = () => {
   }, []);
 
   const getThumbnailsForCategory = (cat) => {
-    // 1. Get dynamic ones for this category
-    const dynamicForCat = dynamicThumbnails.filter(t => t.category === cat).map(t => t.redesignedUrl);
-    
-    // 2. Add hardcoded ones if applicable
-    let hardcodedForCat = [];
-    if (cat === "Reaction") hardcodedForCat = hardcodedReaction;
-    if (cat === "Gaming") hardcodedForCat = hardcodedGaming;
-    if (cat === "YouTube Faceless") hardcodedForCat = hardcodedFaceless;
-
-    return [...dynamicForCat, ...hardcodedForCat];
+    return dynamicThumbnails.filter(t => t.category === cat).map(t => t.redesignedUrl);
   };
 
   return (

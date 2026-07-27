@@ -222,14 +222,70 @@ const Admin = () => {
     }
   };
 
+  const migrateHardcoded = async () => {
+    const hardcodedReaction = [
+      "vidiq_thumbnail_1 (2).png",
+      "vidiq_thumbnail_1 (3).png",
+      "thumbnail-f9d9b037-d96f-494a-8221-f66ebd8d2263.png"
+    ];
+    const hardcodedGaming = [
+      "bennett-after.jpg",
+      "bennett-before.jpg"
+    ];
+    const hardcodedFaceless = [
+      "1782100834465-019eed7c-1559-78bc-aaf8-9f4685f9035b.jpg",
+      "5jF5J7RV0KE-HD.jpg",
+      "faceless-thumbnails.png",
+      "latestthumbnail (1).png",
+      "magicthumb_meghanmarkle.jpg",
+      "meghanmarklethumbnail (1).jpg",
+      "meghanmarklethumbnail (2).jpg",
+      "meghanmarklethumbnail.jpg",
+      "thumbnail_story_driven_v5.jpg"
+    ];
+
+    if (!window.confirm("Are you sure? This will add all 14 hardcoded images to Firebase. Only click this ONCE.")) return;
+
+    setIsLoading(true);
+    try {
+      const allThumbs = [
+        ...hardcodedReaction.map(url => ({ title: "Reaction Thumbnail", redesignedUrl: "/" + url, category: "Reaction" })),
+        ...hardcodedGaming.map(url => ({ title: "Gaming Thumbnail", redesignedUrl: "/" + url, category: "Gaming" })),
+        ...hardcodedFaceless.map(url => ({ title: "Faceless Thumbnail", redesignedUrl: "/" + url, category: "YouTube Faceless" }))
+      ];
+
+      for (const t of allThumbs) {
+        await addDoc(thumbnailsCollectionRef, {
+          title: t.title,
+          originalVideoId: "",
+          redesignedUrl: t.redesignedUrl,
+          category: t.category,
+          createdAt: serverTimestamp()
+        });
+      }
+      alert("Migration complete! Check the thumbnails tab.");
+      fetchData();
+    } catch (error) {
+      console.error(error);
+      alert("Error during migration");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="admin-page section-padding animate-fade-in">
       <div className="container">
         <div className="admin-header">
           <h1 className="page-title text-gradient">Admin Dashboard</h1>
-          <button onClick={handleLogout} className="btn-outline logout-btn">
-            <LogOut size={18} /> Logout
-          </button>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button onClick={migrateHardcoded} className="btn-primary" style={{ background: '#f59e0b', borderColor: '#f59e0b' }}>
+              Migrate Old Data (Click Once)
+            </button>
+            <button onClick={handleLogout} className="btn-outline logout-btn">
+              <LogOut size={18} /> Logout
+            </button>
+          </div>
         </div>
 
         <div className="admin-tabs" style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
