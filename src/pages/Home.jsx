@@ -207,8 +207,8 @@ const Home = () => {
               <p className="testimonial-text">"Jnaneshwar completely transformed my channel. The retention graph is insanely flat, and I hit monetization in just 2 months!"</p>
               <div className="testimonial-author">
                 <div className="stars"><Star size={16}/><Star size={16}/><Star size={16}/><Star size={16}/><Star size={16}/></div>
-                <h4>Faceless Finance Channel</h4>
-                <span>100k+ Subscribers</span>
+                <h4>Faceless Celebrity Channel</h4>
+                <span>1.6k Subscribers</span>
               </div>
             </div>
             
@@ -217,7 +217,7 @@ const Home = () => {
               <p className="testimonial-text">"The sound design and pacing in the long form videos are cinematic. Highly recommend for anyone looking to scale."</p>
               <div className="testimonial-author">
                 <div className="stars"><Star size={16}/><Star size={16}/><Star size={16}/><Star size={16}/><Star size={16}/></div>
-                <h4>History Explainer Channel</h4>
+                <h4>Facts Channel</h4>
                 <span>Monetized Creator</span>
               </div>
             </div>
