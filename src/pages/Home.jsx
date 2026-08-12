@@ -46,8 +46,8 @@ const Home = () => {
               Masterpieces.
             </h1>
             <p className="hero-subtitle">
-              I specialize in high-retention video editing for faceless YouTube channels. 
-              Turning raw ideas into monetized, engaging content.
+              Hi, I am Satti Jnaneshwarareddy. I specialize in high-retention video editing for faceless YouTube channels. 
+              Turning raw ideas into monetized, engaging content. Reach me at jnaneshwarareddysatti@gmail.com
             </p>
             <div className="hero-actions">
               <Link to="/short-form" className="btn-primary">
